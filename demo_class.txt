@@ -1,0 +1,204 @@
+package demo;
+import java.util.Scanner;
+import java.io.*;
+import java.lang.String;
+
+class table{
+	public int id, date, trans;
+}
+
+public class demo_class {
+	/*** Calculate the total expense for user. 
+	* @param  
+	* @throws NoSuchIDExceptions 
+	* If ID not exist in Accounting System, throw NoSuchIDException 
+	* @return true if id exist, false otherwise 
+	* * Example: someObject.checkID(1234567); return true. 
+	* Time estimate: O(n) 
+	*/
+	public static void TotalExpense(table var[],int id_in, int len) {
+		int sum=0;
+		for(int i = 0; i<=len ;i++) {
+			if(id_in == var[i].id) {
+				sum = sum+var[i].trans;
+			}
+		}
+		System.out.println("您的總支出為: "+sum+" 元");//print total expense
+		return;
+	}
+
+	/*** Print out all the transaction records for user. 
+	* @param  
+	* @throws NoSuchIDExceptions 
+	* If ID not exist in Accounting System, throw NoSuchIDException 
+	* @return true if id exist, false otherwise 
+	* * Example: someObject.checkID(1234567); return true. 
+	* Time estimate: O(n) 
+	*/
+	public static void Allrecords(table var[],int id_in, int len) {
+		for(int i = 0; i<=len ;i++) {
+			if(id_in == var[i].id)
+				System.out.println("日期:"+var[i].date+" 消費紀錄:"+var[i].trans+"元");
+		}
+		return;
+	}
+
+	/*** Calculate the specific day expense for user. 
+	* @param 
+	* @throws NoSuchIDExceptions 
+	* If ID not exist in Accounting System, throw NoSuchIDException 
+	* @return true if id exist, false otherwise 
+	* * Example: someObject.checkID(1234567); return true. 
+	* Time estimate: O(n) 
+	*/
+	public static void DayTrans(table var[],int id_in, int len) {
+		Scanner scanner_2 = new Scanner(System.in);
+		int input = scanner_2.nextInt();
+		int sum = 0;
+		for(int i = 0; i<=len ;i++) {
+			if(input == var[i].date && id_in == var[i].id){//add identify id condition
+				sum += var[i].trans;
+			}
+		}
+		System.out.println("您在"+input+"的消費金額為: "+sum+" 元");
+		return;
+	}
+
+	/*** Calculate the average daily expense during specific month for user. 
+	* @param 
+	* @throws NoSuchIDExceptions 
+	* If ID not exist in Accounting System, throw NoSuchIDException 
+	* @return true if id exist, false otherwise 
+	* * Example: someObject.checkID(1234567); return true. 
+	* Time estimate: O(n) 
+	*/
+	public static void AvgTrans(table var[],int id_in, int len) {
+		Scanner scanner = new Scanner(System.in);
+		int input = scanner.nextInt();
+		int month = input%100;
+		int year = input/100;
+		float sum = 0;
+		if(month == 2) {
+			if(year%4 != 0 || (year%100 == 0 && year%400 !=0) ) {
+				for(int i = 0; i<= len ;i++) {
+					if((var[i].date/100)%100 == 2 && var[i].date/10000 == year && id_in == var[i].id){//add identify id condition
+						sum = sum + var[i].trans;
+					}
+				}
+				System.out.println("您在"+ input+ "的日平均消費金額為: "+sum/28+" 元");
+			}else if((year%4 == 0 && year%100 !=0) || year%400 == 0) {
+				for(int i = 0; i<= len ;i++) {
+					if((var[i].date/100)%100 == 2 && var[i].date/10000 == year && id_in == var[i].id){
+						sum = sum + var[i].trans;
+					}
+				}
+				System.out.println("您在"+ input+ "的日平均消費金額為: "+sum/29+" 元");
+			}
+		}else if(month == 4 || month == 6 || month == 9 || month == 11) {
+			for(int i = 0; i<= len ;i++) {
+				if(month == (var[i].date/100)%100 && var[i].date/10000 == year && id_in == var[i].id){
+					sum = sum + var[i].trans;
+				}
+			}
+			System.out.println("您在"+ input+ "的日平均消費金額為: "+sum/30+" 元");
+		}else if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 ){
+			for(int i = 0; i<= len ;i++) {
+				if(month == (var[i].date/100)%100 && var[i].date/10000 == year && id_in == var[i].id){
+					sum = sum + var[i].trans;
+					System.out.println(sum);
+				}
+			}
+			System.out.println("您在"+ input+ "的日平均消費金額為: "+sum/31+" 元");
+		}
+		return;
+	}
+	
+	
+	public static void main(String[] argv)throws IOException {
+		Scanner scanner = new Scanner(System.in);
+		table[] var = new table[700];
+		for(int i = 0; i < 700; i++) {
+			var[i] = new table();
+		}
+		
+		int len = 1;
+	    String[] strs = new String[700];
+	    Scanner sc = null;
+	 
+	    sc = new Scanner(new File("src/input.txt"));
+	
+	    while (sc.hasNext()) {
+	      strs[len] = sc.next(); 
+	      len++;
+	    }
+	    sc.close();
+	    
+	    //sSystem.out.println(index);
+	    int index = 0;
+	    for(int j = 1; j < len; j++) {
+	    	if(j%3 == 0) {
+	    		var[index].trans = Integer.valueOf(strs[j]);
+	    		index++;
+	    	}else if(j%3 == 1) {
+	    		var[index].id = Integer.valueOf(strs[j]);
+	    	}
+	    	else if(j%3 == 2) {
+	    		var[index].date = Integer.valueOf(strs[j]);
+	    	}
+	    }
+	    
+	    
+	    int id_in = 0;
+	    int exitornot_1 = 1;
+	    while(exitornot_1 == 1) {
+	    	String str2;
+	    	System.out.println("輸入 ID 或 Q(結束使用)?");//user input id
+		    str2 = scanner.next();
+		    if(str2.charAt(0) == 'Q') {
+		    	System.out.println("Bye Bye!");
+		    	exitornot_1 = 0;
+		    	return;
+		    }
+		    else if(str2.charAt(0) == '1' || str2.charAt(0) == '2' || str2.charAt(0) == '3' || str2.charAt(0) == '4' || str2.charAt(0) == '5' || str2.charAt(0) == '6' || str2.charAt(0) == '7' || str2.charAt(0) == '8' || str2.charAt(0) == '9'){
+		    	id_in = Integer.valueOf(str2).intValue();
+		    	
+		    	 //check if id exist
+			    int check=0;
+			    for(int i=0; i<=len;i++) {
+			    	if(id_in == var[i].id) check = 1;
+			    }
+			    if(check == 1) {
+			    	System.out.println("Welcome "+id_in+"");
+			    	exitornot_1 = 0;
+			    }
+			    else System.out.println("你的ID打錯了~再檢查一次!");//print:enter the id again
+		    }else {
+		    	System.out.println("查無此ID!");
+		    }
+	    }  
+	    
+	    int exitornot_2 = 1;
+	    while(exitornot_2 == 1) {
+			System.out.println("輸入指令:\n"
+					+ "1) A 顯示總支出\n"
+					+ "2) B 顯示全部消費紀錄\n"
+					+ "3) C 顯示特定日期消費金額\n"
+					+ "4) D 顯示特定月份日平均消費金額\n"
+					+ "5) Q 離開系統\n");
+			char choice = scanner.next().charAt(0);
+	
+			if(choice == 'A') TotalExpense(var, id_in, len); 
+			else if(choice == 'B') Allrecords(var, id_in, len);
+			else if(choice == 'C') DayTrans(var, id_in, len);
+			else if(choice == 'D') AvgTrans(var, id_in, len);
+			else if(choice == 'Q') {
+				System.out.println("感謝您的使用！");
+				exitornot_2 = 0;
+			}else {
+				System.out.println("指令錯了!");
+			}
+	    }
+	    return;
+	}
+}
+
